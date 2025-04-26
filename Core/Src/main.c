@@ -14,8 +14,13 @@ int main(void)
   SystemClock_Config();
 
   /* Initialize all configured peripherals */
+  /* PC13 和 PA0 中断上升沿触发
+   * PA1 PA5(开发板上绿灯) PA8 推挽输出
+   */
   MX_GPIO_Init();
+  // 初始化 UART2
   MX_USART2_UART_Init();
+  // 初始化蓝牙
   MX_BlueNRG_MS_Init();
 
 

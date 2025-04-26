@@ -24,12 +24,16 @@
 /******************************************************************************
  * Function Definitions 
 ******************************************************************************/
+/* 初始化一个空链表
+ */
 void list_init_head (tListNode * listHead)
 {
   listHead->next = listHead;
   listHead->prev = listHead;	
 }
 
+/* 判断当前链表是否为空，返回 1 表示链表为空，返回 0 表示链表不为空
+ */
 uint8_t list_is_empty (tListNode * listHead)
 {
   uint8_t return_value;

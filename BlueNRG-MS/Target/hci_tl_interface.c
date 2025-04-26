@@ -254,7 +254,7 @@ void hci_tl_lowlevel_init(void)
   
   /* USER CODE END hci_tl_lowlevel_init 2 */
   
-  /* Register event irq handler */
+  /* 注册按键中断回调函数 --- hci_tl_lowlevel_isr */
   HAL_EXTI_GetHandle(&hexti0, EXTI_LINE_0);
   HAL_EXTI_RegisterCallback(&hexti0, HAL_EXTI_COMMON_CB_ID, hci_tl_lowlevel_isr);
   HAL_NVIC_SetPriority(EXTI0_IRQn, 0, 0);
@@ -267,17 +267,18 @@ void hci_tl_lowlevel_init(void)
 }
 
 /**
-  * @brief HCI Transport Layer Low Level Interrupt Service Routine
-  *
-  * @param  None
-  * @retval None
-  */
+ * @brief HCI 传输层低级中断服务程序
+ * @details 当 BlueNRG-MS 模块通过中断通知主机有数据可用时调用。
+ *          该函数会检查是否有数据可用，并调用 HCI 异步事件通知函数处理数据。
+ * @param  None
+ * @retval None
+ */
 void hci_tl_lowlevel_isr(void)
 {
-  /* Call hci_notify_asynch_evt() */
-  while(IsDataAvailable())
+  // 调用 hci_notify_asynch_evt() 处理异步事件
+  while(IsDataAvailable()) // 检查是否有数据可用
   {        
-    if (hci_notify_asynch_evt(NULL))
+    if (hci_notify_asynch_evt(NULL)) // 如果事件处理完成，则退出
     {
       return;
     }

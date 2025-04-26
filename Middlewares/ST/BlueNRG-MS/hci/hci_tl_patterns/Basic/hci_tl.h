@@ -45,13 +45,13 @@
  * @{
  */ 
 struct hci_request {
-  uint16_t ogf;     /**< Opcode Group Field */
-  uint16_t ocf;     /**< Opcode Command Field */
+  uint16_t ogf;     /**< 操作码组字段（Opcode Group Field） */
+  uint16_t ocf;     /**< 操作码命令字段（Opcode Command Field） */
   uint32_t event;   /**< HCI Event */
-  void     *cparam; /**< HCI Command from MCU to Host */
-  uint32_t clen;    /**< Command Length */
-  void     *rparam; /**< Response from Host to MCU */
-  uint32_t rlen;    /**< Response Length */
+  void     *cparam; /**< HOST 发送给 control 的数据参数 */
+  uint32_t clen;    /**< HOST 发送给 control 的数据长度 */
+  void     *rparam; /**< control 返回给 HOST 的数据参数 */
+  uint32_t rlen;    /**< control 返回给 HOST 的数据长度 */
 };
 /**
  * @}
@@ -78,13 +78,13 @@ typedef struct _tHciDataPacket
  */ 
 typedef struct
 {                
-  int32_t (* Init)    (void* pConf); /**< Pointer to HCI TL function for the IO Bus initialization */
-  int32_t (* DeInit)  (void); /**< Pointer to HCI TL function for the IO Bus de-initialization */  
-  int32_t (* Reset)   (void); /**< Pointer to HCI TL function for the IO Bus reset */    
-  int32_t (* Receive) (uint8_t*, uint16_t); /**< Pointer to HCI TL function for the IO Bus data reception */
-  int32_t (* Send)    (uint8_t*, uint16_t); /**< Pointer to HCI TL function for the IO Bus data transmission */
-  int32_t (* DataAck) (uint8_t*, uint16_t* len); /**< Pointer to HCI TL function for the IO Bus data ack reception */	
-  int32_t (* GetTick) (void); /**< Pointer to BSP function for getting the HAL time base timestamp */    
+  int32_t (* Init)    (void* pConf); /**< 指向HCI TL函数的指针，用于IO总线初始化 */
+  int32_t (* DeInit)  (void); /**< 指向HCI TL函数的指针，用于IO反总线初始化 */  
+  int32_t (* Reset)   (void); /**< 指向HCI TL函数的指针，用于IO总线复位 */    
+  int32_t (* Receive) (uint8_t*, uint16_t); /**< 指向用于IO总线数据接收的HCI TL函数的指针 */
+  int32_t (* Send)    (uint8_t*, uint16_t); /**< 指向HCI TL函数的指针，用于IO总线数据传输 */
+  int32_t (* DataAck) (uint8_t*, uint16_t* len); /**< 指向用于IO总线数据接收的HCI TL函数的指针 */	
+  int32_t (* GetTick) (void); /**< 指向BSP函数的指针，用于获取HAL时间基时间戳 */    
 } tHciIO;
 /**
  * @}
@@ -109,8 +109,8 @@ typedef enum
  */
 typedef struct
 {   
-  tHciIO io; /**< Manage the BUS IO operations */
-  void (* UserEvtRx) (void * pData); /**< ACI events callback function pointer */  
+  tHciIO io; /**< 管理BUS IO操作，也就是 SPI 的相关操作 */
+  void (* UserEvtRx) (void * pData); /**< HCI 事件回调函数指针 */  
 } tHciContext;
 
 /**

@@ -47,38 +47,44 @@ tBleStatus aci_hal_get_fw_build_number(uint16_t *build_number)
 }
 
 tBleStatus aci_hal_write_config_data(uint8_t offset, 
-                                    uint8_t len,
-                                    const uint8_t *val)
+  uint8_t len,
+  const uint8_t *val)
 {
-  struct hci_request rq;
-  uint8_t status;
-  uint8_t buffer[HCI_MAX_PAYLOAD_SIZE];
-  uint8_t indx = 0;
-    
-  if ((len+2) > HCI_MAX_PAYLOAD_SIZE)
-    return BLE_STATUS_INVALID_PARAMS;
+  struct hci_request rq; // 定义 HCI 请求结构体
+  uint8_t status;        // 用于存储返回的状态
+  uint8_t buffer[HCI_MAX_PAYLOAD_SIZE]; // 用于存储发送的数据缓冲区
+  uint8_t indx = 0;      // 缓冲区索引
 
+  // 检查数据长度是否超出最大负载大小
+  if ((len + 2) > HCI_MAX_PAYLOAD_SIZE)
+  return BLE_STATUS_INVALID_PARAMS; // 返回参数无效错误
+
+  // 将偏移量写入缓冲区
   buffer[indx] = offset;
   indx++;
-    
+
+  // 将数据长度写入缓冲区
   buffer[indx] = len;
   indx++;
-        
+
+  // 将数据内容复制到缓冲区
   BLUENRG_memcpy(buffer + indx, val, len);
-  indx +=  len;
+  indx += len;
 
+  // 初始化 HCI 请求结构体
   BLUENRG_memset(&rq, 0, sizeof(rq));
-  rq.ogf = OGF_VENDOR_CMD;
-  rq.ocf = OCF_HAL_WRITE_CONFIG_DATA;
-  rq.cparam = (void *)buffer;
-  rq.clen = indx;
-  rq.rparam = &status;
-  rq.rlen = 1;
+  rq.ogf = OGF_VENDOR_CMD; // 设置操作码组字段为厂商命令
+  rq.ocf = OCF_HAL_WRITE_CONFIG_DATA; // 设置操作码命令字段为写配置数据
+  rq.cparam = (void *)buffer; // 设置命令参数为缓冲区
+  rq.clen = indx; // 设置命令参数长度
+  rq.rparam = &status; // 设置响应参数为状态变量
+  rq.rlen = 1; // 设置响应参数长度为 1 字节
 
+  // 发送 HCI 请求(使用 SPI 给 control 芯片发送命令)
   if (hci_send_req(&rq, FALSE) < 0)
-    return BLE_STATUS_TIMEOUT;
+  return BLE_STATUS_TIMEOUT; // 如果发送失败，返回超时错误
 
-  return status;
+  return status; // 返回操作状态
 }
 
 tBleStatus aci_hal_read_config_data(uint8_t offset, uint16_t data_len, uint8_t *data_len_out_p, uint8_t *data)

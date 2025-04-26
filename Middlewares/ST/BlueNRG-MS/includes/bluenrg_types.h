@@ -27,7 +27,7 @@
 #define __BIG_ENDIAN    1
 #endif
 
-/* Change this define to 1 if zero-length arrays are not supported by your compiler. */
+/* 如果编译器不支持零长度数组，则将此定义更改为1 */
 #define VARIABLE_SIZE   
 
 /* Byte order conversions */

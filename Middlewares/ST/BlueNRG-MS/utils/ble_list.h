@@ -18,8 +18,8 @@
 #include <stdint.h>
 
 typedef struct _tListNode {
-  struct _tListNode * next;
-  struct _tListNode * prev;
+  struct _tListNode * next; // 当前节点
+  struct _tListNode * prev; // 下一个节点
 } tListNode, *pListNode;
 
 void list_init_head (tListNode * listHead);

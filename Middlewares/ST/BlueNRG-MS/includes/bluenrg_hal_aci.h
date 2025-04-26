@@ -34,118 +34,105 @@
  */
 
 /**
- * @brief This command retrieves the buid number of the firmware.
- * @param[out] build_number Build number identifying the firmware release.
- * @return Value indicating success or error code.
+ * @brief 获取固件的构建号。
+ * @param[out] build_number 返回标识固件发布版本的构建号。
+ * @return 返回表示成功或错误代码的值。
  */
 tBleStatus aci_hal_get_fw_build_number(uint16_t *build_number);
 
 /**
- * @brief This command writes a value to a low level configure data structure.
- * @note  It is useful to setup directly some low level parameters for the system at runtime.
- * @param offset Offset in the data structure. The starting member in the data structure will have an offset 0.\n
- * 				 See @ref Config_vals.
- *
- * @param len Length of data to be written
- * @param[out] val Data to be written
- * @return Value indicating success or error code.
+ * @brief 将一个值写入低级配置数据结构。
+ * @note  该命令可在运行时直接设置系统的某些底层参数。
+ * @param offset 数据结构中的偏移量。数据结构的第一个成员偏移为 0。\n
+ *               详见 @ref Config_vals。
+ * @param len    要写入的数据长度
+ * @param[out] val 要写入的数据缓冲区指针
+ * @return 返回表示成功或错误代码的值。
  */
 tBleStatus aci_hal_write_config_data(uint8_t offset, 
                                     uint8_t len,
                                     const uint8_t *val);
 /**
- * @brief This command requests the value in the low level configure data structure.
- *        The number of read bytes changes for different Offset.
- * @param offset Offset in the data structure. The starting member in the data structure will have an offset 0.\n
- * 				 See @ref Config_vals.
- * @param data_len Length of the data buffer
- * @param[out] data_len_out_p length of the data returned by the read.
- * @param[out] data Read data
- * @return Value indicating success or error code.
+ * @brief 从低级配置数据结构中读取值。
+ *        不同的偏移量可导致读取字节数的变化。
+ * @param offset           数据结构中的偏移量。数据结构的第一个成员偏移为 0。\n
+ *                         详见 @ref Config_vals。
+ * @param data_len         数据缓冲区的长度
+ * @param[out] data_len_out_p  读取到的数据长度输出指针
+ * @param[out] data        存放读取数据的缓冲区指针
+ * @return 返回表示成功或错误代码的值。
  */
 tBleStatus aci_hal_read_config_data(uint8_t offset, uint16_t data_len, uint8_t *data_len_out_p, uint8_t *data);
 
 /**
- * @brief This command sets the TX power level of the BlueNRG.
- * @note  By controlling the EN_HIGH_POWER and the PA_LEVEL, the combination of the 2 determines
- *        the output power level (dBm).
- *        When the system starts up or reboots, the default TX power level will be used, which is
- *        the maximum value of 8dBm. Once this command is given, the output power will be changed
- *        instantly, regardless if there is Bluetooth communication going on or not. For example,
- *        for debugging purpose, the BlueNRG can be set to advertise all the time and use this
- *        command to observe the signal strength changing. The system will keep the last received
- *        TX power level from the command, i.e. the 2nd command overwrites the previous TX power
- *        level. The new TX power level remains until another Set TX Power command, or the system
- *        reboots.\n
- * @param en_high_power Can be only 0 or 1. Set high power bit on or off. It is strongly adviced to use the
- * 						right value, depending on the selected hardware configuration for the RF network:
- * 						normal mode or high power mode.
- * @param pa_level Can be from 0 to 7. Set the PA level value.
- * @return Value indicating success or error code.
+ * @brief 设置 BlueNRG 的发射功率级别。
+ * @note  通过控制 `en_high_power` 和 `pa_level` 的组合来确定输出功率（dBm）。
+ *        系统启动或重启后默认使用最大 8 dBm 的功率级别。调用此命令后，
+ *        输出功率会立即生效，无论是否正在进行蓝牙通信。可用于调试时
+ *        持续广播并观察信号强度变化。此设置会一直保留到下一次调用
+ *        设置发射功率命令或系统重启为止。
+ * @param en_high_power   只可为 0 或 1，设置高功率位的开关。请根据所选 RF 硬件
+ *                        配置（普通模式或高功率模式）合理设置。
+ * @param pa_level        PA 级别，可取值 0～7。
+ * @return 返回表示成功或错误代码的值。
  */
 tBleStatus aci_hal_set_tx_power_level(uint8_t en_high_power, uint8_t pa_level);
 
 /**
- * @brief This command returns the number of packets sent in Direct Test Mode.
- * @note  When the Direct TX test is started, a 32-bit counter is used to count how many packets
- *        have been transmitted. This command can be used to check how many packets have been sent
- *        during the Direct TX test.\n
- *        The counter starts from 0 and counts upwards. The counter can wrap and start from 0 again.
- *        The counter is not cleared until the next Direct TX test starts.
- * @param[out] number_of_packets Number of packets sent during the last Direct TX test.
- * @return Value indicating success or error code.
+ * @brief 返回直接测试模式下发送的数据包数量。
+ * @note  当直接发送测试（Direct TX Test）开始时，会启用一个 32 位计数器来统计已发送的数据包数量。
+ *        该命令可用于查询在直接发送测试期间已发送的数据包总数。\n
+ *        计数器从 0 开始累加，若达到最大值后会重绕（wrap）并重新从 0 开始计数。
+ *        计数器仅在下一次直接发送测试开始时被清零。
+ * @param[out] number_of_packets 指向存放上次直接发送测试发送数据包数量的变量
+ * @return 返回表示成功或错误代码的值。
  */
 tBleStatus aci_hal_le_tx_test_packet_number(uint32_t *number_of_packets);
 
 /**
- * @brief Put the device in standby mode.
- * @note Normally the BlueNRG will automatically enter sleep mode to save power. This command puts the
- * 		 device into the Standby mode instead of the sleep mode. The difference is that, in sleep mode,
- * 		 the device can still wake up itself with the internal timer. But in standby mode, this timer is
- * 		 disabled. So the only possibility to wake up the device is by external signals, e.g. a HCI command
- * 		 sent via SPI bus.
- * 		 The command is only accepted when there is no other Bluetooth activity. Otherwise an error code
- * 		 ERR_COMMAND_DISALLOWED will be returned.
+ * @brief 让设备进入待机（Standby）模式。
+ * @note  正常情况下，BlueNRG 会自动进入睡眠（Sleep）模式以节省功耗。此命令将设备置于待机模式，
+ *        而非睡眠模式。两者区别在于：在睡眠模式下，设备可通过内部定时器自动唤醒；而在待机模式下，
+ *        内部定时器被禁用，仅能通过外部信号（例如通过 SPI 总线发送的 HCI 命令）唤醒设备。\n
+ *        仅当设备无其它蓝牙活动时，该命令才会被接受；否则会返回错误码 `ERR_COMMAND_DISALLOWED`。
  *
- * @return Value indicating success or error code.
+ * @return 返回表示成功或错误代码的值。
  */
 tBleStatus aci_hal_device_standby(void);
 
 /**
- * @brief This command starts a carrier frequency, i.e. a tone, on a specific channel.
- * @note  The frequency sine wave at the specific channel may be used for test purpose only.
- * 		  The channel ID is a parameter from 0 to 39 for the 40 BLE channels, e.g. 0 for 2.402GHz, 1 for 2.404GHz etc.
- * 		  This command shouldn't be used when normal Bluetooth activities are ongoing.
- * 		  The tone should be stopped by aci_hal_tone_stop() command.
+ * @brief 在指定信道上发射载波（音频）信号。
+ * @note  在特定信道上发射正弦波信号，仅供测试用途。
+ *        信道编号取值范围为 0 ～ 39，共 40 个 BLE 信道：例如信道 0 对应 2.402 GHz，中频减 250 kHz 后发射；
+ *        信道 1 对应 2.404 GHz，以此类推。\n
+ *        正常蓝牙活动进行时，请勿使用此命令。测试完成后，应调用 `aci_hal_tone_stop()` 停止音频信号。
  *
- * @param rf_channel BLE Channel ID, from 0 to 39 meaning (2.402 + 2*N) GHz. Actually the tone will be emitted at the
- * 					 channel central frequency minus 250 kHz.
- * @return Value indicating success or error code.
+ * @param rf_channel BLE 信道编号，取值 0 ～ 39（物理发射频率为 2.402 + 0.002×rf_channel GHz，再减 250 kHz）
+ * @return 返回表示成功或错误代码的值。
  */
 tBleStatus aci_hal_tone_start(uint8_t rf_channel);
 
 /**
- * This command is used to stop the previously started aci_hal_tone_start() command.
- * @return Value indicating success or error code.
+ * @brief 停止先前由 aci_hal_tone_start() 启动的音频信号发射命令。
+ * @return 返回表示成功或错误代码的值。
  */
 tBleStatus aci_hal_tone_stop(void);
 
 /**
- * @brief This command returns the status of all the connections.
- * @note  This command returns the status of the 8 Bluetooth low energy links managed by the device.
- * @param[out] link_status Array of link status (8 links). See @ref Link_Status.
- * @param[out] conn_handle Array of connection handles for each link.
- * @return Value indicating success or error code.
+ * @brief 返回所有连接的状态信息。
+ * @note  该命令返回设备所管理的 8 条低功耗蓝牙链路的状态。
+ * @param[out] link_status   存放每条链路状态的数组（长度 8）。详见 @ref Link_Status。
+ * @param[out] conn_handle   存放每条链路连接句柄的数组（长度 8）。
+ * @return 返回表示成功或错误代码的值。
  */
 tBleStatus aci_hal_get_link_status(uint8_t link_status[8], uint16_t conn_handle[8]);
 
 /**
- * @brief This command returns the anchor period and the largest available slot.
- * @note  This command returns information about the anchor period to help application in selecting
- * 		  slot timings when operating in multi-link scenarios.
- * @param anchor_period Current anchor period (multiple of 0.625 ms).
- * @param max_free_slot Maximum available time (multiple of 0.625 ms) that can be allocated for a new slot.
- * @return Value indicating success or error code.
+ * @brief 返回当前的锚点周期及最大可用时隙长度。
+ * @note  该命令提供锚点周期的信息，帮助应用在多链路场景中选择合适的时隙时序。
+ * @param[out] anchor_period  当前锚点周期（以 0.625 ms 为单位的倍数）。
+ * @param[out] max_free_slot  最大可用时隙长度（以 0.625 ms 为单位的倍数）。
+ * @return 返回表示成功或错误代码的值。
  */
 tBleStatus aci_hal_get_anchor_period(uint32_t *anchor_period, uint32_t *max_free_slot);
 
@@ -154,52 +141,52 @@ tBleStatus aci_hal_get_anchor_period(uint32_t *anchor_period, uint32_t *max_free
  */
 
 /**
- * @defgroup HAL_Events HAL events
- * The structures are the data field of @ref evt_blue_aci.
+ * @defgroup HAL_Events HAL 事件
+ * 这些结构体是 @ref evt_blue_aci 的数据字段。
  * @{
  */
 
-/** HCI vendor specific event, raised at BlueNRG power-up or reboot. */
+/** 
+ * HCI 特定厂商事件，在 BlueNRG 上电或重启时触发。 
+ */
 #define EVT_BLUE_HAL_INITIALIZED                 (0x0001)
 typedef __packed struct _evt_hal_initialized{
-  uint8_t reason_code; /**< Reset reason. See @ref Reset_Reasons */
+  uint8_t reason_code; /**< 重置原因，详见 @ref Reset_Reasons */
 } PACKED evt_hal_initialized;
 
 /**
- * This event is generated when an overflow occurs in the event queue read by the external microcontroller.
- * This is normally caused when the external microcontroller does not read pending events.
- * The returned bitmap indicates which event has been lost. Please note that one bit set to 1 indicates one or
- * more occurrences of the particular events. The event EVT_BLUE_HAL_EVENTS_LOST cannot be lost and it will
- * be inserted in the event queue as soon as a position is freed in the event queue. This event should not
- * happen under normal operating condition where external microcontroller promptly reads events signaled by
- * IRQ pin. It is provided to detected unexpected behavior of the external microcontroller or to allow
- * application to recover situations where critical events are lost.
+ * 当外部微控制器读取的事件队列发生溢出时，产生此事件。
+ * 通常因为外部微控制器未及时读取待处理事件而导致。
+ * 返回的位图指示哪些事件被丢失。每个位被设置为 1 表示对应事件发生过一次或多次。
+ * 事件 EVT_BLUE_HAL_EVENTS_LOST 不会被丢失，只要队列有空位，就会立即插入该事件。
+ * 在外部微控制器通过 IRQ 引脚及时读取事件的正常情况下，不应出现此事件。
+ * 此事件用于检测外部微控制器的异常行为，或在关键事件丢失时帮助应用恢复。
  */
 #define EVT_BLUE_HAL_EVENTS_LOST_IDB05A1                (0x0002)
 typedef __packed struct _evt_hal_events_lost{
-  uint8_t  lost_events[8]; /**< Bitmap of lost events. Each bit indicates one or more occurrences of the specific event. See @ref Lost_Events */
+  uint8_t  lost_events[8]; /**< 丢失事件的位图，每个位表示对应事件发生过一次或多次，详见 @ref Lost_Events */
 } PACKED evt_hal_events_lost_IDB05A1;
 
 
 /**
- * This event is given to the application after the @ref ACI_BLUE_INITIALIZED_EVENT
- * when a system crash is detected. This events returns system crash information for debugging purposes.
- * Information reported are useful to understand the root cause of the crash.
+ * @brief 在检测到系统崩溃时，向应用程序报告崩溃信息。
+ * @note  本事件在 @ref ACI_BLUE_INITIALIZED_EVENT 之后触发，用于调试。返回的各种寄存器与类型信息
+ *        有助于分析崩溃根本原因。
  */
 #define EVT_BLUE_HAL_CRASH_INFO_IDB05A1                 (0x0003)
 typedef __packed struct _evt_hal_crash_info{
-  uint8_t  crash_type; /**< Type of crash: Assert failed (0), NMI Fault (1), Hard Fault (2)  */
-  uint32_t sp; /**< SP register */
-  uint32_t r0; /**< R0 register  */
-  uint32_t r1; /**< R1 register  */
-  uint32_t r2; /**< R2 register  */
-  uint32_t r3; /**< R3 register  */
-  uint32_t r12; /**< R12 register  */
-  uint32_t lr; /**< LR register  */
-  uint32_t pc; /**< PC register  */
-  uint32_t xpsr; /**< xPSR register  */
-  uint8_t  debug_data_len; /**< length of debug_data field  */
-  uint8_t  debug_data[VARIABLE_SIZE]; /**< Debug data */  
+  uint8_t  crash_type;      /**< 崩溃类型：断言失败（0）、NMI 异常（1）、硬件故障（2） */
+  uint32_t sp;              /**< SP 寄存器 */
+  uint32_t r0;              /**< R0 寄存器 */
+  uint32_t r1;              /**< R1 寄存器 */
+  uint32_t r2;              /**< R2 寄存器 */
+  uint32_t r3;              /**< R3 寄存器 */
+  uint32_t r12;             /**< R12 寄存器 */
+  uint32_t lr;              /**< LR 寄存器 */
+  uint32_t pc;              /**< PC 寄存器 */
+  uint32_t xpsr;            /**< xPSR 寄存器 */
+  uint8_t  debug_data_len;  /**< debug_data 字段长度 */
+  uint8_t  debug_data[];    /**< 调试数据 */
 } PACKED evt_hal_crash_info_IDB05A1;
 
 
@@ -210,88 +197,98 @@ typedef __packed struct _evt_hal_crash_info{
 
 /**
  * @anchor Reset_Reasons
- * @name Reset Reasons
- * See @ref EVT_BLUE_HAL_INITIALIZED.
+ * @name 重置原因
+ * 详见 @ref EVT_BLUE_HAL_INITIALIZED。
  * @{
  */
-#define RESET_NORMAL            1 /**< Normal startup. */
-#define RESET_UPDATER_ACI       2 /**< Updater mode entered with ACI command */
-#define RESET_UPDATER_BAD_FLAG  3 /**< Updater mode entered due to a bad BLUE flag */
-#define RESET_UPDATER_PIN       4 /**< Updater mode entered with IRQ pin */
-#define RESET_WATCHDOG          5 /**< Reset caused by watchdog */
-#define RESET_LOCKUP            6 /**< Reset due to lockup */
-#define RESET_BROWNOUT          7 /**< Brownout reset */
-#define RESET_CRASH             8 /**< Reset caused by a crash (NMI or Hard Fault) */
-#define RESET_ECC_ERR           9 /**< Reset caused by an ECC error */
+#define RESET_NORMAL            1 /**< 正常启动。 */
+#define RESET_UPDATER_ACI       2 /**< 通过 ACI 命令进入升级模式 */
+#define RESET_UPDATER_BAD_FLAG  3 /**< 由于无效的 BLUE 标志进入升级模式 */
+#define RESET_UPDATER_PIN       4 /**< 通过 IRQ 引脚进入升级模式 */
+#define RESET_WATCHDOG          5 /**< 由看门狗复位导致的重置 */
+#define RESET_LOCKUP            6 /**< 由于锁死（Lockup）导致的重置 */
+#define RESET_BROWNOUT          7 /**< 棕断（Brownout）复位 */
+#define RESET_CRASH             8 /**< 由于系统崩溃（NMI 或 Hard Fault）导致的重置 */
+#define RESET_ECC_ERR           9 /**< 由于 ECC 错误导致的重置 */
 /**
  * @}
  */
 
 
 /**
- * @defgroup Config_vals Offsets and lengths for configuration values.
- * @brief Offsets and lengths for configuration values.
- * 		  See aci_hal_write_config_data().
+ * @defgroup Config_vals 配置值的偏移量和长度
+ * @brief 配置值的偏移量和长度说明。
+ *        详见 aci_hal_write_config_data()。
  * @{
  */
 
 /**
- * @name Configuration values.
- * See @ref aci_hal_write_config_data().
+ * @name 配置值列表
+ * 详见 @ref aci_hal_write_config_data()。
  * @{
  */
-#define CONFIG_DATA_PUBADDR_OFFSET          (0x00) /**< Bluetooth public address */
-#define CONFIG_DATA_DIV_OFFSET              (0x06) /**< DIV used to derive CSRK */
-#define CONFIG_DATA_ER_OFFSET               (0x08) /**< Encryption root key used to derive LTK and CSRK */
-#define CONFIG_DATA_IR_OFFSET               (0x18) /**< Identity root key used to derive LTK and CSRK */
-#define CONFIG_DATA_LL_WITHOUT_HOST         (0x2C) /**< Switch on/off Link Layer only mode. Set to 1 to disable Host.
- 	 	 	 	 	 	 	 	 	 	 	 	 	 It can be written only if aci_hal_write_config_data() is the first command 	 	 	 	 	 	 	 	 	 	 	 	 after reset. */
-#define CONFIG_DATA_RANDOM_ADDRESS          (0x80) /**< Stored static random address. Read-only. */
+#define CONFIG_DATA_PUBADDR_OFFSET          (0x00) /**< 蓝牙公共地址 */
+#define CONFIG_DATA_DIV_OFFSET              (0x06) /**< 用于派生 CSRK 的 DIV 值 */
+#define CONFIG_DATA_ER_OFFSET               (0x08) /**< 用于派生 LTK 和 CSRK 的加密根密钥 */
+#define CONFIG_DATA_IR_OFFSET               (0x18) /**< 用于派生 LTK 和 CSRK 的身份根密钥 */
+#define CONFIG_DATA_LL_WITHOUT_HOST         (0x2C) /**< 开启/关闭仅链路层模式。设置为 1 以禁用主机
+ 	 	 	 	 	 	 	 	 	 	 	 	 	                              仅当 aci_hal_write_config_data() 是复位后执行的第一个命令时才可写入。 */
+#define CONFIG_DATA_RANDOM_ADDRESS          (0x80) /**< 存储的静态随机地址。只读 */
 
 /**
- * Select the BlueNRG mode configurations.\n
- * @li Mode 1: slave or master, 1 connection, RAM1 only (small GATT DB)
- * @li Mode 2: slave or master, 1 connection, RAM1 and RAM2 (large GATT DB)
- * @li Mode 3: master/slave, 8 connections, RAM1 and RAM2.
- * @li Mode 4: master/slave, 4 connections, RAM1 and RAM2 simultaneous scanning and advertising.
+ * @brief 选择 BlueNRG 模式配置
+ *
+ * @li 模式 1：从机或主机，1 个连接，仅使用 RAM1（小型 GATT 数据库）
+ * @li 模式 2：从机或主机，1 个连接，使用 RAM1 和 RAM2（大型 GATT 数据库）
+ * @li 模式 3：主机/从机，8 个连接，使用 RAM1 和 RAM2
+ * @li 模式 4：主机/从机，4 个连接，同时进行扫描和广播，使用 RAM1 和 RAM2
  */
 #define CONFIG_DATA_MODE_OFFSET 			(0x2D)
 
-#define CONFIG_DATA_WATCHDOG_DISABLE 		(0x2F) /**< Set to 1 to disable watchdog. It is enabled by default. */
+/** 
+ * @brief 设置为 1 可禁用看门狗，默认启用 
+ */
+#define CONFIG_DATA_WATCHDOG_DISABLE 		(0x2F)
 
 /**
  * @}
  */
 
 /**
- * @name Length for configuration values.
- * See @ref aci_hal_write_config_data().
+ * @name 配置值的长度
+ * @brief 详见 @ref aci_hal_write_config_data()
  * @{
  */
-#define CONFIG_DATA_PUBADDR_LEN             (6)
-#define CONFIG_DATA_DIV_LEN                 (2)
-#define CONFIG_DATA_ER_LEN                  (16)
-#define CONFIG_DATA_IR_LEN                  (16)
-#define CONFIG_DATA_LL_WITHOUT_HOST_LEN     (1)
-#define CONFIG_DATA_MODE_LEN                (1)
-#define CONFIG_DATA_WATCHDOG_DISABLE_LEN    (1)
+/**
+ * @brief 配置值的长度定义
+ * @details 这些宏定义了在调用 `aci_hal_write_config_data` 或 `aci_hal_read_config_data` 时，
+ *          每个配置项的长度（以字节为单位）。
+ */
+#define CONFIG_DATA_PUBADDR_LEN             (6)  /**< 蓝牙公共地址的长度（6 字节）。 */
+#define CONFIG_DATA_DIV_LEN                 (2)  /**< 用于派生 CSRK 的 DIV 值长度（2 字节）。 */
+#define CONFIG_DATA_ER_LEN                  (16) /**< 加密根密钥（Encryption Root Key）的长度（16 字节）。 */
+#define CONFIG_DATA_IR_LEN                  (16) /**< 身份根密钥（Identity Root Key）的长度（16 字节）。 */
+#define CONFIG_DATA_LL_WITHOUT_HOST_LEN     (1)  /**< 链路层模式配置的长度（1 字节）。 */
+#define CONFIG_DATA_MODE_LEN                (1)  /**< 模式配置的长度（1 字节）。 */
+#define CONFIG_DATA_WATCHDOG_DISABLE_LEN    (1)  /**< 看门狗禁用配置的长度（1 字节）。 */
+
 /**
  * @}
  */
 
 /**
  * @anchor Link_Status
- * @name Status of the link
- * See @ref aci_hal_get_link_status().
+ * @name 链路状态
+ * 详见 @ref aci_hal_get_link_status()。
  * @{
  */
-#define STATUS_IDLE                         0
-#define STATUS_ADVERTISING                  1
-#define STATUS_CONNECTED_AS_SLAVE           2
-#define STATUS_SCANNING                     3
-#define STATUS_CONNECTED_AS_MASTER          5
-#define STATUS_TX_TEST                      6
-#define STATUS_RX_TEST                      7
+#define STATUS_IDLE                         0 /**< 空闲状态，设备未执行任何操作。 */
+#define STATUS_ADVERTISING                  1 /**< 广播状态，设备正在发送广播包。 */
+#define STATUS_CONNECTED_AS_SLAVE           2 /**< 从机连接状态，设备作为从机已建立连接。 */
+#define STATUS_SCANNING                     3 /**< 扫描状态，设备正在扫描其他设备的广播包。 */
+#define STATUS_CONNECTED_AS_MASTER          5 /**< 主机连接状态，设备作为主机已建立连接。 */
+#define STATUS_TX_TEST                      6 /**< 发送测试状态，设备正在执行发射测试。 */
+#define STATUS_RX_TEST                      7 /**< 接收测试状态，设备正在执行接收测试。 */
 /**
  * @}
  */
@@ -300,12 +297,12 @@ typedef __packed struct _evt_hal_crash_info{
  * @}
  */
 
- /**
+/**
  * @anchor Lost_Events
- * @name Lost events bitmap
- * See @ref EVT_BLUE_HAL_EVENTS_LOST.
+ * @name 丢失事件位图
+ * 详见 @ref EVT_BLUE_HAL_EVENTS_LOST
  * @{
- */   
+ */  
 #define EVT_DISCONN_COMPLETE_BIT                                     0
 #define EVT_ENCRYPT_CHANGE_BIT                                       1
 #define EVT_READ_REMOTE_VERSION_COMPLETE_BIT                         2
@@ -360,22 +357,22 @@ typedef __packed struct _evt_hal_crash_info{
  */
 
 /**
- * @name Hardware error event codes
- * See @ref EVT_HARDWARE_ERROR.
+ * @name 硬件错误事件代码
+ * 详见 @ref EVT_HARDWARE_ERROR。
  * @{
  */
 /**
- * Error on the SPI bus has been detected, most likely caused by incorrect SPI configuration on the external micro-controller.
+ * 检测到 SPI 总线错误，通常由于外部微控制器的 SPI 配置不正确引起。
  */
 #define SPI_FRAMING_ERROR           0
 /**
- * Caused by a slow crystal startup and they are an indication that the HS_STARTUP_TIME
- * in the device configuration needs to be tuned. After this event is recommended to hardware reset the device.
+ * 由于晶振启动缓慢引起，表明设备配置中的 HS_STARTUP_TIME 需要调整。
+ * 出现此事件后，建议对设备进行硬件重置。
  */
 #define RADIO_STATE_ERROR           1
 /**
- * Caused by a slow crystal startup and they are an indication that the HS_STARTUP_TIME
- * in the device configuration needs to be tuned. After this event is recommended to hardware reset the device.
+ * 由于晶振启动缓慢引起，表明设备配置中的 HS_STARTUP_TIME 需要调整。
+ * 出现此事件后，建议对设备进行硬件重置。
  */
 #define TIMER_OVERRUN_ERROR         2 
 /**
