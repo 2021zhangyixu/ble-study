@@ -1,13 +1,15 @@
 # 申明
 
-1. 该仓库代码源引自**[bluetooth-low-energy](https://github.com/dineshjakkam/bluetooth-low-energy)**，本人只是在大佬的基础上加上的一点点中文注释，以及提供一些中文学习资料，以便中文开发者们学习 BLE HOST。硬件也非常简单是 `STM32F401RETX` + `X-NUCLEO-IDB05A1` ，这两个淘宝上都有卖，合起来价格不超过 200 rmb。	
+1. 该仓库代码源引自 **[bluetooth-low-energy](https://github.com/dineshjakkam/bluetooth-low-energy)**  ，本人只是在大佬的基础上加上的一点点中文注释，以及提供一些中文学习资料，以便中文开发者们学习 BLE HOST。硬件也非常简单是 `STM32F401RETX` + `X-NUCLEO-IDB05A1` ，这两个淘宝上都有卖，合起来价格不超过 200 rmb。	
 2. 还有一个超级轻量级的 BLE HOST 仓库，是基于 ESP32 HCI 层的，只实现了广播和扫描：**[toy-ble-stack](https://github.com/mattkelly/toy-ble-stack)**
+3. 推荐各位学习 **[bluetooth-low-energy](https://github.com/dineshjakkam/bluetooth-low-energy)**  的原因很简单，这里没有使用到 RTOS ，也没有复杂的数据结构体，就一个链表和几个函数指针，非常通俗易懂。
 
-# 请参阅文档以了解更多详细信息：
+# Demo 复现视频：
 
 1. <a href="docs/bluetooth-low-energy.pdf">Project report</a>
 2. <a href="docs/bluetooth-low-energy.txt">Configuration file</a>
-3. [Demo](https://www.youtube.com/watch?v=9G3L847c0DI)
+3. [Demo 演示视频：Youtube](https://www.youtube.com/watch?v=9G3L847c0DI)
+4. 这里需要使用到 [STM32CubeIDE](https://www.st.com.cn/zh/development-tools/stm32cubeide.html) ，我没有使用过这个 IDE ，所以可能需要各位自行了解如果将该代码导入到 IDE 中。我尝试导入了一下，发现可能需要进行一些调整。各位请自行解决，如果发现成功解决了相关问题，也可以提交 pull requests。
 
 # docs目录介绍
 
@@ -30,7 +32,8 @@
 4. CSDN 上有一个叫 [Wireless_Link](https://wlink.blog.csdn.net/) 的蓝牙大佬，他写的博客非常不错。至于视频课程嘛，我只能说，**不适合新手小白**，如果没有 Linux 开发基础，或者是不打算做安卓底层开发，个人觉得，**慎重！！！**
 5. [ST 官方 BLE 中文课程(B站)](https://www.bilibili.com/video/BV1Hh4y1t76g/)
 6. [ESP32 蓝牙视频教程(B站)](https://www.bilibili.com/video/BV1fs4y1G7eu) --- 注意：这个后面的课程会需要给 up 充电池！如果不想花钱，也想学 ESP32 的蓝牙从机开发，可以看[CSDN：一文迅速上手 ESP32 bluedroid 蓝牙从机开发](https://zyxbeyourself.blog.csdn.net/article/details/141467673)
-7. [01 什么是BLE(B站)](https://www.bilibili.com/video/BV1jLoUYjENp) --- 这位可能也是 ST 的工作人员，很厉害
+7. [01 什么是BLE(B站)](https://www.bilibili.com/video/BV1jLoUYjENp) --- 这位可能也是 ST 的工作人员
+8. 如果你入门了 BLE 之后想要深入，可以学习 [mynewt-nimble](https://github.com/apache/mynewt-nimble) 这个不仅开源了 HOST 层实现，还开源了 Control 层。乐鑫的 ESP32 就是移植的这个协议栈。
 
 ## 示例demo相关资料
 
