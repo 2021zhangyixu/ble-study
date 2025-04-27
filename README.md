@@ -3,6 +3,7 @@
 1. 该仓库代码源引自 **[bluetooth-low-energy](https://github.com/dineshjakkam/bluetooth-low-energy)**  ，本人只是在大佬的基础上加上的一点点中文注释，以及提供一些中文学习资料，以便中文开发者们学习 BLE HOST。硬件也非常简单是 `STM32F401RETX` + `X-NUCLEO-IDB05A1` ，这两个淘宝上都有卖，合起来价格不超过 200 rmb。	
 2. 还有一个超级轻量级的 BLE HOST 仓库，是基于 ESP32 HCI 层的，只实现了广播和扫描：**[toy-ble-stack](https://github.com/mattkelly/toy-ble-stack)**
 3. 推荐各位学习 **[bluetooth-low-energy](https://github.com/dineshjakkam/bluetooth-low-energy)**  的原因很简单，这里没有使用到 RTOS ，也没有复杂的数据结构体，就一个链表和几个函数指针，非常通俗易懂。
+4. 后面查了一下，发现这个是 ST  推出的蓝牙解决方案，是在 HCI 层上加了一层 ACI 层。
 
 # Demo 复现视频：
 
@@ -48,6 +49,9 @@
 | stm32f401_reference_manual.pdf                | stm32f401参考手册                                            |
 | stm32f401re.pdf                               | stm32f401re Datasheet                                        |
 | x-nucleo-idb05a1.pdf                          | 这个是 ST 的那个蓝牙 control 芯片原理图                      |
+| PM0237-BlueNRG_BlueNRG-MS栈编程指南.pdf       | 介绍BlueNRG-MS结构                                           |
+| DM00115333.pdf                                | BlueNRG 和 BlueNRG-MS 无线自举程序笔记                       |
+| bluenrg-ms.pdf                                | ST 官方 bluenrg-ms 协议详细介绍                              |
 
 ## SIG 官方手册
 
