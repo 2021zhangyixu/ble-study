@@ -49,10 +49,16 @@
 | stm32f401re.pdf                               | stm32f401re Datasheet                                        |
 | x-nucleo-idb05a1.pdf                          | 这个是 ST 的那个蓝牙 control 芯片原理图                      |
 
-## Core_v5.4.pdf
+## SIG 官方手册
 
-1. 这个是 SIG 官方核心文档，其他的资料我们可以去 [SIG 官网](https://www.bluetooth.com/zh-cn/)下载。
+1. 如下 SIG 官方的一些文档，其他的资料我们可以去 [SIG 官网](https://www.bluetooth.com/zh-cn/)下载。
 2. 可能有人要说了，这是全英文文档，我英文贼差看不懂，怎么办？我英语也很差(笑)，所以我一般都用 [小绿鲸](https://www.xljsci.com/) 进行文献翻译(小绿鲸，打钱！)，各位也可以用知云等文献翻译软件，看个人习惯吧。
+
+| 文件名               | 介绍                                                         |
+| -------------------- | ------------------------------------------------------------ |
+| Core_v5.4.pdf        | SIG 官方核心文档                                             |
+| Assigned_Numbers.pdf | 与 BLE 广播包的类型定义有关                                  |
+| CSS_v12.pdf          | 和 BLE 广播包的数据类型具体含义和格式有关，与 Assigned_Numbers.pdf 配合使用 |
 
 # 抓包工具
 
